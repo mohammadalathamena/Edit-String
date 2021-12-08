@@ -1,97 +1,46 @@
-<?php
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-
-class LevenshteinEditDistance  
-{
-
-    public function __construct(){
-        
-    }
-    /**
-     * 
-     */
-    function calculate(string $source,string  $target,int $sLength,int $tLength)
-{ 
-    // If first string is empty, 
-    if ($sLength == 0)
-        return $tLength; 
-  
-    // If second string is empty,
-    if ($tLength == 0) 
-        return $sLength; 
-  
-    // If last characters of two 
-    // strings are same, nothing 
-    // much to do. Ignore last 
-    // characters and get count 
-    // for remaining strings. 
-    if ($source[$sLength - 1] == $target[$tLength - 1])
-    { 
-        return $this->calculate($source, $target, 
-                            $sLength - 1, $tLength - 1); 
-    }
-      
-    // If last characters are not same, 
-    // consider all three operations on 
-    // last character of first string, 
-    // recursively compute minimum cost 
-    // for all three operations and take 
-    // minimum of three values. 
-  
-    return 1 + min($this->calculate($source, $target, 
-                                $sLength, $tLength - 1), // Insert 
-                   $this->calculate($source, $target, 
-                                $sLength - 1, $tLength), // Remove 
-                   $this->calculate($source, $target, 
-                                $sLength - 1, $tLength - 1)); // Replace 
-} 
-    // public function levenshtein(String $source = '', String $destination = '')
-    // {
-    //     print_r(func_get_args());
-    //     return 'asd';
-    // }
-}
-
-class HammingEditDistance
-{
-    public function calculate($source, $target , $count = 0 , $i = 0)
-    {
-        
-        if (isset($source[$i]) != '') {
-            echo $i . 'i<br/>' ;
-            if ($source[$i] != $target[$i])
-            // echo $count . '<br/>' ;
-            $count++;
-            $i++;
-            $this->calculate($source , $target , $count , $i);
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+<p>Please select Method:</p>
+  <input type="radio" id="Levenshtein" name="method" value="1" checked>
+  <label for="html">Levenshtein</label><br>
+  <input type="radio" id="Hamming" name="method" value="0">
+  <label for="css">Hamming</label><br>
+ 
+<input type="text" name="" placeholder="Source String" id="source">
+<input type="text" name="" placeholder="Target String" id="target">
+<button onclick="sendData()">calculate</button>
+<div id="result"></div>
+    <script>
+        function sendData() {
+            $('#result').text('please wait .....') ;
+            const url = 'controller.php';
+            $.ajax(
+                {
+                    url:url,
+                    method:'post',
+                    data:{
+                        source:document.getElementById('source').value ,
+                        target:document.getElementById('target').value ,
+                        type:document.querySelector('input[name="method"]:checked').value
+                    },
+                    success:(data)=>{
+                        $('#result').text(data) ;
+                },error:(error)=>{
+                    console.log(error);
+                    $('#result').text('server can\'t handling this request please try agin with less characters') ;
+                },
+            });
         }
-        while (isset($source[$i]) != '')
-        {
-            if ($source[$i] != $target[$i])
-            $count++;
-            $i++;
-            // echo $count . '<br/>' ;
-        }
-        return $count;
-    }
-}
-$type = $_POST['type'] ;
-$source = $_POST['source'];
-$target = $_POST['target'];
-$calObj = $type == 1 ? new LevenshteinEditDistance : new HammingEditDistance ;
-// print_r($type)  ;
-// die ;
-if ($type) {
-     $calObj->calculate(
-        $source,
-        $target,
-        strlen($source),
-        strlen($target)
-    ); 
-}else{
-     $calObj->calculate(
-        $source,
-        $target
-    ); 
-}
-
+    </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+{
+    "name": "mohamamd/edit-number",
+    "type": "library",
+    "autoload": {
+        "psr-4": {
+            "Commands\\":"Commands/",
+            "EditString\\":"src/",
+            "Test\\": "test"
+        }
+    },
+    "require": {
+        "symfony/console": "^5.4"
+    }
+}
